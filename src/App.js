@@ -1,23 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import {useState, useEffect} from 'react'
+
+const tabs =['posts', 'comments', 'albums', 'photos', 'todos', 'users']
 
 function App() {
+
+
+  const [post, setPost] =useState([]);
+  const [type, setType] = useState('posts');
+  console.log(type);
+
+
+  useEffect(()=>{
+    fetch(`https://jsonplaceholder.typicode.com/${type}`)
+    .then(res => res.json())
+    .then(type=>{
+      setPost(type);
+    })
+
+
+  },[type])
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {tabs.map(tab=>(
+            <button key={tab} onClick={()=>{setType(tab)}}>{tab}</button>
+
+      ))}
+
+      <ul>
+        {post.map(post=>(
+          <li key={post.id}>{post.title || post.email}</li>
+
+        ))}
+      </ul>
+
+
     </div>
   );
 }
